@@ -27,6 +27,14 @@ def test_is_byod_cluster():
     assert _stub_test({"cluster": {"byod": {"type": "gpu"}}}).is_byod_cluster()
 
 
+def test_get_byod_runtime_env():
+    assert _stub_test({}).get_byod_runtime_env() == {}
+    os.environ["ENV"] = "env"
+    assert _stub_test(
+        {"cluster": {"byod": {"runtime_env": ["a=b", "c=d=e", "ENV"]}}}
+    ).get_byod_runtime_env() == {"a": "b", "c": "d=e", "ENV": "env"}
+
+
 def test_get_python_version():
     assert _stub_test({}).get_python_version() == "3.7"
     assert _stub_test({"python": "3.8"}).get_python_version() == "3.8"
